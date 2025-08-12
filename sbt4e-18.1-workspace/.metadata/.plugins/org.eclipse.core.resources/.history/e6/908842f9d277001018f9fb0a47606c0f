@@ -1,0 +1,91 @@
+/*
+ * "Hello World" example.
+ *
+ * This example prints 'Hello from Nios II' to the STDOUT stream. It runs on
+ * the Nios II 'standard', 'full_featured', 'fast', and 'low_cost' example
+ * designs. It runs with or without the MicroC/OS-II RTOS and requires a STDOUT
+ * device in your system's hardware.
+ * The memory footprint of this hosted application is ~69 kbytes by default
+ * using the standard reference design.
+ *
+ * For a reduced footprint version of this template, and an explanation of how
+ * to reduce the memory footprint for a given application, see the
+ * "small_hello_world" template.
+ *
+ */
+
+#include <stdio.h>
+#include "system.h"
+#include "altera_avalon_pio_regs.h"
+#include "sccharts.h"
+#include <stdint.h>
+#include "sys/alt_alarm.h"
+
+
+volatile int count = 0;
+volatile uint8_t timer_on = 0;
+
+void timer_interupt(alt_u32 id){
+	uint8_t key = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
+	if (~key & 2){
+		count++;
+	}
+	printf("%x\n", key);
+	alt_alarm_start(&timer, 500, timer_interupt, context);
+	timer_on = 0;
+}
+
+
+
+int main()
+{
+
+  uint8_t store = 0;
+  uint8_t key = 0;
+
+  FILE* lcd;
+  lcd = fopen(LCD_NAME, "w");
+
+  while (lcd==NULL) {
+
+  }
+  alt_alarm timer;
+  int time_count = 0;
+  void * context = (void*)&time_count;
+
+  alt_alarm_start(&timer, 500, timer_interupt, context);
+
+  for(;;){
+
+	  key = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
+
+	  if  ((~store & 1) == 0 && (~key & 1) == 1){
+		  count ++;
+		  printf("%d\n", count);
+	  }
+
+	  store = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
+	  fprintf(lcd, "%d", count);
+  }
+
+  return 0;
+}
+
+
+
+//int main(){
+//
+//	TickData data;
+//
+//	reset(&data);
+//
+//	for(;;){
+//		data.a = ~IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE) && 0x04;
+//		data.b = ~IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE) && 0x02;
+//		data.r = ~IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE) && 0x01;
+//
+//		tick(&data);
+//	}
+//
+//	return 0;
+//}
