@@ -10,15 +10,16 @@ scchart heart {
   const int AEI_time = 800
   const int AVI_time = 300
   
-  clock URI, LRI, AVI, VRP, PVARP, AEI
   
   region {
     
-    signal vsi, asi, vr, ar
+    signal vsi, asi, vr, ar, vp_o
+    int ready = 0
 
     initial state heart{
       region{
- 
+        clock VRP
+        
         initial state start
           immediate do VRP = 0 go to waiting
         
@@ -32,6 +33,7 @@ scchart heart {
        }
        
       region{
+        clock PVARP
         
         initial state start
           immediate do PVARP = 0 go to waiting
@@ -46,22 +48,23 @@ scchart heart {
        }
      
       region{
+        clock URI, LRI
         
         initial state start
-          immediate do URI = 0; LRI = 0 go to waiting
+          immediate do URI = 0; LRI = 0; ready = 0 go to waiting
           
         state waiting
-          if URI > URI_time go to waiting_vs
+          if URI > URI_time do ready = 1 go to waiting_vs
           
         state waiting_vs
-          if LRI > LRI_time go to end
+          if LRI > LRI_time do vp_o go to end
           
-        state end
+        final state end
         
       }
       
       region{
-        
+        clock AEI, AVI
 
         initial state start
           immediate do AEI = 0 go to waiting_aei
@@ -69,15 +72,18 @@ scchart heart {
         state waiting_aei
           if asi do AVI = 0 go to waiting_avi
           
-          if AEI > AEI_time do ap go to waiting_avi
+          if AEI > AEI_time do AVI = 0; ap go to waiting_avi
         
         state waiting_avi
+          if AVI > AVI_time && ready == 1 do vp_o go to end
+          
+         final state end
           
       }
      }
       
      if vsi abort to heart
-     if LRI > LRI_time && AVI > AVI_time do vp abort to heart
+     if vp_o do vp abort to heart
    }
    
   
