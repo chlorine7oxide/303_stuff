@@ -13,10 +13,17 @@ scchart heart {
   
   region {
     
-    signal vsi, asi, vr, ar, vp_o
-    int ready = 0
+    signal vsi, asi
+    signal ready
+    signal AEI_done
+    signal vp_o
+    signal AVI_done, URI_done
+    signal r
 
     initial state heart{
+      
+      
+      
       region{
         clock VRP
         
@@ -24,13 +31,25 @@ scchart heart {
           immediate do VRP = 0 go to waiting
         
         state waiting
-          if VRP > VRP_time go to listening
-          if vs do vr go to waiting
-        
+          if VRP > VRP_time go to end
+                  
         state listening
           if vs do vsi go to listening
+          
+        final state end
         
        }
+       
+       
+       region {
+         initial state start
+           if vsi do r go to end
+           
+         final state end
+         
+       }
+       
+       
        
       region{
         clock PVARP
@@ -40,50 +59,80 @@ scchart heart {
         
         state waiting
           if PVARP > PVARP_time go to listening
-          if as do ar go to waiting
-        
+                  
         state listening
           if as do asi go to listening
         
        }
+       
+       
+       
      
       region{
-        clock URI, LRI
+        clock URI
         
         initial state start
-          immediate do URI = 0; LRI = 0; ready = 0 go to waiting
+          immediate do URI = 0 go to waiting
           
         state waiting
-          if URI > URI_time do ready = 1 go to waiting_vs
+          if URI > URI_time do URI_done go to end
+
           
-        state waiting_vs
+        final state end
+        
+      }
+      
+      
+      region{
+        clock LRI
+        
+        initial state start
+          immediate do LRI = 0 go to waiting
+         
+        state waiting
           if LRI > LRI_time do vp_o go to end
           
         final state end
         
       }
       
+      
+      
+      
       region{
-        clock AEI, AVI
+        clock AEI
 
         initial state start
           immediate do AEI = 0 go to waiting_aei
           
         state waiting_aei
-          if asi do AVI = 0 go to waiting_avi
-          
-          if AEI > AEI_time do AVI = 0; ap go to waiting_avi
-        
-        state waiting_avi
-          if AVI > AVI_time && ready == 1 do vp_o go to end
+          if asi do AEI_done go to end
+          if AEI > AEI_time do ap; AEI_done go to end
           
          final state end
           
       }
-     }
       
-     if vsi abort to heart
-     if vp_o do vp abort to heart
+      
+      region{
+        clock AVI
+        
+        initial state start
+         if AEI_done do AVI = 0 go to waiting_avi
+         
+        state waiting_avi
+          if AVI > AVI_time do AVI_done go to end
+          
+        final state end
+        
+      }
+      
+      
+      
+      
+     }
+     if r go to heart
+     if vp_o do vp go to heart
    }
    
   
