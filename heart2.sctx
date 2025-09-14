@@ -1,0 +1,112 @@
+
+
+#resource "timing.h"
+#hostcode-c "#include \"timing.h\""
+#hostcode-c "#include <stdio.h>"
+
+scchart heart2 {
+
+  input signal AS, VS
+  output signal AP, VP
+  
+  signal VR, AR
+  
+  host "int" VRP_time = `VRP_VALUE`
+  host "int" PVARP_time = `PVARP_VALUE`
+  host "int" URI_time = `URI_VALUE`
+  host "int" LRI_time = `LRI_VALUE`
+  host "int" AEI_time = `AEI_VALUE`
+  host "int" AVI_time = `AVI_VALUE`
+  
+  signal a, v
+  signal VS_i
+  
+  bool ready = false
+  
+  region {
+    clock URI
+    
+    initial state waiting
+     if URI >= URI_time do ready = true go to done
+     if v do URI = 0 go to waiting
+    
+    state done
+     if v do URI = 0; ready = false go to waiting
+
+  }
+  
+  
+  region {
+    clock LRI
+    
+    initial state waiting
+     if LRI >= LRI_time do VP go to done
+     if v do LRI = 0 go to waiting
+    
+    state done
+     if v do LRI = 0 go to waiting
+
+  }
+  
+  region {
+    clock VRP
+    
+    initial state ignoring
+      if VRP >= VRP_time go to allowing
+      if VS do VR go to ignoring
+    
+    state allowing
+      if v do VRP = 0 go to ignoring
+      if VS do VS_i go to allowing
+
+  }
+  
+  region {
+    clock PVARP
+    
+    initial state ignoring
+      if PVARP >= PVARP_time go to allowing
+      if AS do AR go to ignoring
+    
+    state allowing
+      if v do PVARP = 0 go to ignoring
+      if AS do a go to allowing
+
+  }
+  
+  
+  region {
+    clock AEI
+    
+    initial state waiting_A
+      if AEI >= AEI_time do AP; a go to waiting_V
+      if a go to waiting_V
+    
+    state waiting_V
+      if v do AEI = 0 go to waiting_A
+
+  }
+  
+  
+  region {
+    clock AVI
+    
+    initial state waiting_A
+      if a do AVI = 0 go to waiting_V
+    
+    state waiting_V
+      if v go to waiting_A
+      if ready && AVI >= AVI_time do VP go to waiting_A
+
+
+  }
+  
+  region {
+    initial state convert_v
+      if pre(VS_i) do v go to convert_v
+      if pre(VP) do v go to convert_v
+    
+  }
+  
+  
+}
