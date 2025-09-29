@@ -74,17 +74,23 @@ int main()
 		  vp = 1;
 		  reset_cycle = 1;
 	  }
-	  key = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
+
+	  if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE)){
+		  key = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
 	  	  if ((~key & 0x01) == 1 && key0_pre == 0){ // key 0 rising
-	  		  extern_v_interrupt();
+		  extern_v_interrupt();
 	  	  }
 	  	  key0_pre = ~key & 0x01;
 
 	  	  if ((~key & 0x02) >> 1 == 1 && key1_pre == 0){ // key 1 rising
-	  		  extern_a_interrupt();
+		  extern_a_interrupt();
 	  	  }
 	  	  key1_pre = ~key & 0x02 >> 1;
+	  }
+	  else {
 
+
+	  }
   }
 
   return 0;
