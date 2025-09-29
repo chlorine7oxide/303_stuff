@@ -22,67 +22,67 @@
 #include "sys/alt_alarm.h"
 
 
-//volatile int count = 0;
-//
-//alt_u32 timer_interupt(void* context){
-//	uint8_t key = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
-//	if (~key & 2){
-//		count++;
-//	}
-//	return 500;
-//}
-//
-//int main()
-//{
-//
-//  uint8_t store = 0;
-//  uint8_t key = 0;
-//
-//  FILE* lcd;
-//  lcd = fopen(LCD_NAME, "w");
-//
-//  while (lcd==NULL) {
-//
-//  }
-//  alt_alarm timer;
-//  int time_count = 0;
-//  void * context = (void*)&time_count;
-//  alt_alarm_start(&timer, 500, timer_interupt, context);
-//
-//  for(;;){
-//
-//	  key = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
-//
-//	  if  ((~store & 1) == 0 && (~key & 1) == 1){
-//		  count ++;
-//	  }
-//
-//	  store = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
-//	  fprintf(lcd, "%d", count);
-//  }
-//
-//  return 0;
-//}
+volatile int count = 0;
 
-
-
-int main(){
-
-	TickData data;
-
-	reset(&data);
-
-	for(;;){
-		data.A = (~IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE) & 0x04) >> 2;
-		data.B = (~IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE) & 0x02) >> 1;
-		data.R = ~IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE) & 0x01;
-
-		tick(&data);
-
-		IOWR(LEDS_GREEN_BASE, 0, data.A | (data.B << 1) | (data.R << 2));
-		IOWR(LEDS_RED_BASE, 0, data.O);
-
+alt_u32 timer_interupt(void* context){
+	uint8_t key = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
+	if (~key & 2){
+		count++;
 	}
-
-	return 0;
+	return 500;
 }
+
+int main()
+{
+
+ uint8_t store = 0;
+ uint8_t key = 0;
+
+ FILE* lcd;
+ lcd = fopen(LCD_NAME, "w");
+
+ while (lcd==NULL) {
+
+ }
+ alt_alarm timer;
+ int time_count = 0;
+ void * context = (void*)&time_count;
+ alt_alarm_start(&timer, 500, timer_interupt, context);
+
+ for(;;){
+
+	  key = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
+
+	  if  ((~store & 1) == 0 && (~key & 1) == 1){
+		  count ++;
+	  }
+
+	  store = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
+	  fprintf(lcd, "%d", count);
+ }
+
+ return 0;
+}
+
+
+
+// int main(){
+
+// 	TickData data;
+
+// 	reset(&data);
+
+// 	for(;;){
+// 		data.A = (~IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE) & 0x04) >> 2;
+// 		data.B = (~IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE) & 0x02) >> 1;
+// 		data.R = ~IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE) & 0x01;
+
+// 		tick(&data);
+
+// 		IOWR(LEDS_GREEN_BASE, 0, data.A | (data.B << 1) | (data.R << 2));
+// 		IOWR(LEDS_RED_BASE, 0, data.O);
+
+// 	}
+
+// 	return 0;
+// }
