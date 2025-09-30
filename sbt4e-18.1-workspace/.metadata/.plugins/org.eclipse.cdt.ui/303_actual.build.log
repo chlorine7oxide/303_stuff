@@ -1,4 +1,4 @@
-13:45:27 **** Incremental Build of configuration Nios II for project 303_actual ****
+13:55:37 **** Incremental Build of configuration Nios II for project 303_actual ****
 make all 
 Info: Building ../303_actual_bsp/
 C:/intelFPGA/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../303_actual_bsp/
@@ -14,5 +14,5 @@ Info: Creating 303_actual.objdump
 nios2-elf-objdump --disassemble --syms --all-header --source 303_actual.elf >303_actual.objdump
 [303_actual build complete]
 
-13:45:28 Build Finished (took 1s.193ms)
+13:55:42 Build Finished (took 5s.14ms)
 
