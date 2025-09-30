@@ -36,20 +36,20 @@ extern volatile alt_u8 started;
 
 extern volatile alt_u8 vp, ap;
 
-volatile FILE* fp;
-volatile char char_recieve;
+//volatile FILE* fp;
+//volatile char char_recieve;
 
 int main() {
-	fp = fopen ("/dev/uart", "r+"); //Open file for reading and writing
+	//fp = fopen ("/dev/uart", "r+"); //Open file for reading and writing
 
-	printf("stuck\n");
+	//printf("stuck\n");
 
-	while (fp == NULL) {
+	//while (fp == NULL) {
 
 
-	};
+	//};
 
-	printf("not stuck\n");
+	//printf("not stuck\n");
 
 	TickData t;
 	reset(&t);
@@ -99,7 +99,7 @@ int main() {
 
 	  	  	  // LED PLACEHOLDER
 	  	  }
-
+	  	  /*
 	  	  else {
 	  		  //char_recieve = getc(fp);
 	  		  if (char_recieve == 'A'){
@@ -121,7 +121,7 @@ int main() {
 
 
 
-	  	  }
+	  	  }*/
 
 	  if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE) & 2){ // if its on then sccharts
 		  tick(&t);
