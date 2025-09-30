@@ -1,0 +1,30 @@
+/*
+ * c_heart.h
+ *
+ *  Created on: 30/09/2025
+ *      Author: jkim960
+ */
+
+#ifndef C_HEART_H_
+#define C_HEART_H_
+
+alt_u32 URI_LRI_interrupt();
+alt_u32 PVARP_interrupt();
+alt_u32 VRP_interrupt();
+alt_u32 AEI_AVI_interrupt();
+
+void extern_v_interrupt();
+void extern_a_interrupt();
+
+volatile alt_alarm URI_LRI, PVARP, VRP, AEI_AVI;
+volatile alt_u8 can_vpulse = 0;
+volatile alt_u8 reset_cycle = 0;
+volatile alt_u8 ignore_v = 1;
+volatile alt_u8 ignore_a = 1;
+volatile alt_u8 is_recent_a = 0; // 0 is venticular event, 1 is atrial event
+volatile alt_u8 need_v_pulse = 0;
+volatile alt_u8 started = 0;
+
+volatile alt_u8 vp = 0, ap = 0;
+
+#endif /* C_HEART_H_ */

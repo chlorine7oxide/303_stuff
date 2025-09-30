@@ -1,0 +1,224 @@
+/*
+ * "Hello World" example.
+ *
+ * This example prints 'Hello from Nios II' to the STDOUT stream. It runs on
+ * the Nios II 'standard', 'full_featured', 'fast', and 'low_cost' example
+ * designs. It runs with or without the MicroC/OS-II RTOS and requires a STDOUT
+ * device in your system's hardware.
+ * The memory footprint of this hosted application is ~69 kbytes by default
+ * using the standard reference design.
+ *
+ * For a reduced footprint version of this template, and an explanation of how
+ * to reduce the memory footprint for a given application, see the
+ * "small_hello_world" template.
+ *
+ */
+
+#include <stdio.h>
+#include <stdint.h>
+
+#include "system.h"
+#include "timing.h"
+#include "altera_avalon_pio_regs.h"
+#include <altera_avalon_uart.h>
+
+#include "sys/alt_alarm.h"
+
+volatile alt_alarm URI_LRI, PVARP, VRP, AEI_AVI;
+volatile alt_u8 can_vpulse = 0;
+volatile alt_u8 reset_cycle = 0;
+volatile alt_u8 ignore_v = 1;
+volatile alt_u8 ignore_a = 1;
+volatile alt_u8 is_recent_a = 0; // 0 is venticular event, 1 is atrial event
+volatile alt_u8 need_v_pulse = 0;
+volatile alt_u8 started = 0;
+
+volatile alt_u8 vp = 0, ap = 0;
+
+void start_cycle(); // starts URI, LRI, AEI, VRP, PVARP after a V event
+
+alt_u32 URI_LRI_interrupt();
+alt_u32 PVARP_interrupt();
+alt_u32 VRP_interrupt();
+alt_u32 AEI_AVI_interrupt();
+
+void extern_v_interrupt();
+void extern_a_interrupt();
+
+void a_pulse();
+void v_pulse();
+
+void uart_tx(char* text);
+void uart_rx();
+
+volatile FILE* fp;
+volatile char char_recieve;
+
+int main()
+{
+	fp = fopen ("/dev/uart", "r+"); //Open file for reading and writing
+
+	printf("stuck\n");
+
+	while (fp == NULL) {
+
+
+	};
+
+	printf("not stuck\n");
+
+	alt_u8 key, key0_pre, key1_pre;
+
+	start_cycle();
+
+  while (1){
+
+	  if (vp){
+	  	  	  		  vp = 0;
+	  	  	  		  printf ('V');
+	  	  	  	  }
+	  	  	      if (ap){
+	  	  	  		  ap = 0;
+	  	  	  		  printf ('A');
+	  	  	  	  }
+
+	  if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE)){
+	  		  key = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
+	  	  	  if ((~key & 0x01) == 1 && key0_pre == 0){ // key 0 rising
+	  		  extern_v_interrupt();
+	  	  	  }
+	  	  	  key0_pre = ~key & 0x01;
+
+	  	  	  if ((~key & 0x02) >> 1 == 1 && key1_pre == 0){ // key 1 rising
+	  		  extern_a_interrupt();
+	  	  	  }
+	  	  	  key1_pre = ~key & 0x02 >> 1;
+
+	  	  	  if (vp){
+	  	  		  vp = 0;
+	  	  		  printf ('V\n');
+	  	  	  }
+	  	      if (ap){
+	  	  		  ap = 0;
+	  	  		  printf ('A\n');
+	  	  	  }
+
+	  	  	  // LED PLACEHOLDER
+	  	  }
+	  	  else {
+	  		  //char_recieve = getc(fp);
+	  		  if (char_recieve == 'A'){
+	  			  extern_a_interrupt();
+	  		  }
+	  		  if (char_recieve == 'V'){
+	  			  extern_v_interrupt();
+	  		  }
+
+	  		  if (vp){
+	  			  vp = 0;
+	  			  fwrite ('V', 1, 1, fp);
+	  		  }
+	  		  if (ap){
+	  		 	  ap = 0;
+	  		 	  fwrite ('A', 1, 1, fp);
+	  		  }
+
+
+
+
+	  	  }
+
+
+	  if (reset_cycle){ // a v event has occurred and timers must be reset
+		  reset_cycle = 0; // reset everything
+		  start_cycle();
+	  }
+	  if (can_vpulse && need_v_pulse){
+		  need_v_pulse = 0;
+		  vp = 1;
+		  reset_cycle = 1;
+	  }
+
+
+  }
+
+  return 0;
+}
+
+void start_cycle(){
+	if (started){
+		alt_alarm_stop(&URI_LRI);
+		alt_alarm_stop(&PVARP);
+		alt_alarm_stop(&VRP);
+		alt_alarm_stop(&AEI_AVI);
+	}
+	started = 1;
+	alt_alarm_start(&URI_LRI, URI_VALUE, URI_LRI_interrupt, NULL);
+	alt_alarm_start(&PVARP, PVARP_VALUE, PVARP_interrupt, NULL);
+	alt_alarm_start(&VRP, VRP_VALUE, VRP_interrupt, NULL);
+	alt_alarm_start(&AEI_AVI, AEI_VALUE, AEI_AVI_interrupt, NULL);
+	ignore_a = 1;
+	ignore_v = 1;
+	can_vpulse = 0;
+	need_v_pulse = 0;
+}
+
+alt_u32 PVARP_interrupt(){
+	ignore_a = 0;
+	return LRI_VALUE; // value so it does not trigger when unwanted
+}
+
+alt_u32 VRP_interrupt(){
+	ignore_v = 0;
+	return LRI_VALUE; // value so it does not trigger when unwanted
+}
+
+alt_u32 URI_LRI_interrupt(){
+	if (!can_vpulse){ // URI timeout
+		can_vpulse = 1;
+		return LRI_VALUE - URI_VALUE;
+	} else { // LRI timeout
+		vp = 1;
+		is_recent_a = 0;
+		reset_cycle = 1;
+		can_vpulse = 0;
+		return URI_VALUE;
+	}
+}
+
+alt_u32 AEI_AVI_interrupt(){
+	if (is_recent_a){ // most recent is a a
+		if (can_vpulse){
+			vp = 1;
+			is_recent_a = 0;
+			reset_cycle = 1;
+		} else {
+			need_v_pulse = 1;
+		}
+		return LRI_VALUE; // large value
+	} else { // most recent is a v
+		ap = 1;
+		is_recent_a = 1;
+		return AVI_VALUE;
+	}
+}
+
+void extern_v_interrupt(){
+	if (!ignore_v){
+		printf("vs\n");
+		can_vpulse = 0;
+		reset_cycle = 1;
+		is_recent_a = 0;
+	}
+}
+
+void extern_a_interrupt(){
+	if (!ignore_a){
+		alt_alarm_stop(&AEI_AVI);
+		printf("as\n");
+		alt_alarm_start(&AEI_AVI, AVI_VALUE, AEI_AVI_interrupt, NULL);
+		is_recent_a = 1;
+	}
+}
+//fwrite (msg, strlen (msg), 1, fp);
+

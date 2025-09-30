@@ -1,4 +1,4 @@
 eclipse.preferences.version=1
-newSoftwareExampleWizardPage.defaultLocation=C\:\\Users\\jkim960\\Downloads\\303_stuff\\DE2-115\\software\\lab2
-newSoftwareExampleWizardPage.sopcinfoFile=C\:\\Users\\jkim960\\Downloads\\303_stuff\\DE2-115\\nios2_system.sopcinfo
-newSoftwareExampleWizardPage2.newBspLocation=C\:\\Users\\jkim960\\Downloads\\303_stuff\\DE2-115\\software\\lab2_bsp
+newSoftwareExampleWizardPage.defaultLocation=C\:\\TEMP\\Newfolder\\303_stuff\\DE2-115\\software\\303_actual
+newSoftwareExampleWizardPage.sopcinfoFile=C\:\\TEMP\\Newfolder\\303_stuff\\DE2-115\\nios2_system.sopcinfo
+newSoftwareExampleWizardPage2.newBspLocation=C\:\\TEMP\\Newfolder\\303_stuff\\DE2-115\\software\\303_actual_bsp

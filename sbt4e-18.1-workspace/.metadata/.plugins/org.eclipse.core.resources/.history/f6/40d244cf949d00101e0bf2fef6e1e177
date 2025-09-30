@@ -1,0 +1,20 @@
+/*
+ * c_heart.h
+ *
+ *  Created on: 30/09/2025
+ *      Author: jkim960
+ */
+
+#ifndef C_HEART_H_
+#define C_HEART_H_
+
+alt_u32 URI_LRI_interrupt();
+alt_u32 PVARP_interrupt();
+alt_u32 VRP_interrupt();
+alt_u32 AEI_AVI_interrupt();
+
+void extern_v_interrupt();
+void extern_a_interrupt();
+
+
+#endif /* C_HEART_H_ */
