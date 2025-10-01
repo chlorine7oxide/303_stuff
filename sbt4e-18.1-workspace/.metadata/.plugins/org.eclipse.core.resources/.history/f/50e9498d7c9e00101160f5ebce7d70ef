@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <stdint.h>
+
+#include "system.h"
+#include "timing.h"
+#include "altera_avalon_pio_regs.h"
+#include "altera_avalon_uart_regs.h"
+#include "scchart_heart.h"
+#include "sys/alt_alarm.h"
+#include "c_heart.h"
+#include "uart.h"
+
+
+// timers
+extern volatile alt_alarm URI_LRI, PVARP, VRP, AEI_AVI;
+
+// variable declaration
+extern volatile alt_u8 can_vpulse;
+extern volatile alt_u8 reset_cycle;
+extern volatile alt_u8 ignore_v;
+extern volatile alt_u8 ignore_a;
+extern volatile alt_u8 is_recent_a; // 0 is venticular event, 1 is atrial event
+extern volatile alt_u8 need_v_pulse;
+extern volatile alt_u8 started;
+
+extern volatile alt_u8 vp, ap;
+
+volatile char char_recieve;
+
+int main() {
+	// initialise the uart
+    IOWR_ALTERA_AVALON_UART_CONTROL(UART_BASE, 0);
+
+    // initialisaiton for sccharts mode
+    TickData t;
+    reset( & t);
+
+    // keys and previous values
+    alt_u8 key, key0_pre, key1_pre;
+
+    // initialisation for C mode
+    start_cycle();
+
+    while (1) {
+
+    	// sw 0: uart mode if off, buttons mode if on
+        if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE) & 1) {
+
+            key = IORD_ALTERA_AVALON_PIO_DATA(KEYS_BASE);
+            t.VS = 0;
+            t.AS = 0;
+
+            if ((~key & 0x01) == 1 && key0_pre == 0) { // key 0 rising : a V pulse is detected
+                if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE) & 2) {
+                    t.VS = 1;
+                } else {
+                    extern_v_interrupt();
+                }
+            }
+            key0_pre = ~key & 0x01;
+
+            if ((~key & 0x02) >> 1 == 1 && key1_pre == 0) { // key 1 rising : a A pulse is detected
+
+                if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE) & 2) {
+                    t.AS = 1;
+                } else {
+                    extern_a_interrupt();
+                }
+            }
+            key1_pre = ~key & 0x02 >> 1;
+
+            if (vp) {
+                vp = 0;
+                printf("V\n");
+            }
+            if (ap) {
+                ap = 0;
+                printf("A\n");
+            }
+
+            // LED PLACEHOLDER
+        } else {
+            uart_rx( & char_recieve);
+            if (char_recieve == 'A') {
+                extern_a_interrupt();
+            }
+            if (char_recieve == 'V') {
+                extern_v_interrupt();
+            }
+
+            if (vp) {
+                vp = 0;
+                uart_tx('V');
+            }
+            if (ap) {
+                ap = 0;
+                uart_tx('A');
+            }
+            char_recieve = '\0';
+
+        }
+
+        if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE) & 2) { // if its on then sccharts
+            tick( & t);
+            ap = t.AP;
+            vp = t.VP;
+        } else {
+            if (reset_cycle) { // a v event has occurred and timers must be reset
+                reset_cycle = 0; // reset everything
+                start_cycle();
+            }
+            if (can_vpulse && need_v_pulse) {
+                need_v_pulse = 0;
+                vp = 1;
+                reset_cycle = 1;
+            }
+        }
+
+    }
+
+    return 0;
+}

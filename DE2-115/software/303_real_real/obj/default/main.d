@@ -7,7 +7,7 @@ obj/default/main.o: main.c ../303_real_real_bsp/system.h \
  scchart_heart.h ../303_real_real_bsp//HAL/inc/sys/alt_alarm.h \
  ../303_real_real_bsp//HAL/inc/sys/alt_llist.h \
  ../303_real_real_bsp//HAL/inc/alt_types.h \
- ../303_real_real_bsp//HAL/inc/priv/alt_alarm.h c_heart.h
+ ../303_real_real_bsp//HAL/inc/priv/alt_alarm.h c_heart.h uart.h
 
 ../303_real_real_bsp/system.h:
 
@@ -34,3 +34,5 @@ scchart_heart.h:
 ../303_real_real_bsp//HAL/inc/priv/alt_alarm.h:
 
 c_heart.h:
+
+uart.h:

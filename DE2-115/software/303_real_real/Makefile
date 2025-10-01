@@ -145,6 +145,7 @@ ELF := 303_real_real.elf
 C_SRCS += c_heart.c
 C_SRCS += main.c
 C_SRCS += scchart_heart.c
+C_SRCS += uart.c
 CXX_SRCS :=
 ASM_SRCS :=
 

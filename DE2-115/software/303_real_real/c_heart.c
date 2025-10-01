@@ -17,7 +17,11 @@
 #include "sys/alt_alarm.h"
 #include "c_heart.h"
 
+
+// timers
 volatile alt_alarm URI_LRI, PVARP, VRP, AEI_AVI;
+
+// variable declaration
 volatile alt_u8 can_vpulse = 0;
 volatile alt_u8 reset_cycle = 0;
 volatile alt_u8 ignore_v = 1;
@@ -28,6 +32,7 @@ volatile alt_u8 started = 0;
 
 volatile alt_u8 vp = 0, ap = 0;
 
+// reset on V activity
 void start_cycle(){
 	if (started){
 		alt_alarm_stop(&URI_LRI);
@@ -44,18 +49,23 @@ void start_cycle(){
 	ignore_v = 1;
 	can_vpulse = 0;
 	need_v_pulse = 0;
+	is_recent_a = 0;
 }
 
+// pvarp timeout
 alt_u32 PVARP_interrupt(){
 	ignore_a = 0;
 	return LRI_VALUE; // value so it does not trigger when unwanted
 }
 
+// vrp timeout
 alt_u32 VRP_interrupt(){
 	ignore_v = 0;
+	IOWR_ALTERA_AVALON_PIO_DATA(LEDS_GREEN_BASE, 0);
 	return LRI_VALUE; // value so it does not trigger when unwanted
 }
 
+// upper and lower bounds for V pulse rate
 alt_u32 URI_LRI_interrupt(){
 	if (!can_vpulse){ // URI timeout
 		can_vpulse = 1;
@@ -69,6 +79,7 @@ alt_u32 URI_LRI_interrupt(){
 	}
 }
 
+// A -> V -> A
 alt_u32 AEI_AVI_interrupt(){
 	if (is_recent_a){ // most recent is a a
 		if (can_vpulse){
@@ -86,14 +97,17 @@ alt_u32 AEI_AVI_interrupt(){
 	}
 }
 
+// VS detected
 void extern_v_interrupt(){
 	if (!ignore_v){
 		can_vpulse = 0;
 		reset_cycle = 1;
 		is_recent_a = 0;
 	}
+
 }
 
+// AS detected
 void extern_a_interrupt(){
 	if (!ignore_a){
 		alt_alarm_stop(&AEI_AVI);
@@ -101,5 +115,4 @@ void extern_a_interrupt(){
 		is_recent_a = 1;
 	}
 }
-//fwrite (msg, strlen (msg), 1, fp);
 

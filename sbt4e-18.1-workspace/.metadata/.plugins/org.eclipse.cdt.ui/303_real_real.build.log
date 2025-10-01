@@ -1,9 +1,100 @@
-16:41:20 **** Incremental Build of configuration Nios II for project 303_real_real ****
+17:26:45 **** Incremental Build of configuration Nios II for project 303_real_real ****
 make all 
 Info: Building ../303_real_real_bsp/
 C:/intelFPGA/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../303_real_real_bsp/
 [BSP build complete]
+Info: Compiling c_heart.c to obj/default/c_heart.o
+nios2-elf-gcc -xc -MP -MMD -c -I../303_real_real_bsp//HAL/inc -I../303_real_real_bsp/ -I../303_real_real_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mhw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/c_heart.o c_heart.c
+c_heart.c: In function 'start_cycle':
+c_heart.c:33:18: warning: passing argument 1 of 'alt_alarm_stop' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   alt_alarm_stop(&URI_LRI);
+                  ^
+In file included from c_heart.c:17:0:
+../303_real_real_bsp//HAL/inc/sys/alt_alarm.h:77:13: note: expected 'alt_alarm * {aka struct alt_alarm_s *}' but argument is of type 'volatile alt_alarm * {aka volatile struct alt_alarm_s *}'
+ extern void alt_alarm_stop (alt_alarm* the_alarm);
+             ^
+c_heart.c:34:18: warning: passing argument 1 of 'alt_alarm_stop' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   alt_alarm_stop(&PVARP);
+                  ^
+In file included from c_heart.c:17:0:
+../303_real_real_bsp//HAL/inc/sys/alt_alarm.h:77:13: note: expected 'alt_alarm * {aka struct alt_alarm_s *}' but argument is of type 'volatile alt_alarm * {aka volatile struct alt_alarm_s *}'
+ extern void alt_alarm_stop (alt_alarm* the_alarm);
+             ^
+c_heart.c:35:18: warning: passing argument 1 of 'alt_alarm_stop' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   alt_alarm_stop(&VRP);
+                  ^
+In file included from c_heart.c:17:0:
+../303_real_real_bsp//HAL/inc/sys/alt_alarm.h:77:13: note: expected 'alt_alarm * {aka struct alt_alarm_s *}' but argument is of type 'volatile alt_alarm * {aka volatile struct alt_alarm_s *}'
+ extern void alt_alarm_stop (alt_alarm* the_alarm);
+             ^
+c_heart.c:36:18: warning: passing argument 1 of 'alt_alarm_stop' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   alt_alarm_stop(&AEI_AVI);
+                  ^
+In file included from c_heart.c:17:0:
+../303_real_real_bsp//HAL/inc/sys/alt_alarm.h:77:13: note: expected 'alt_alarm * {aka struct alt_alarm_s *}' but argument is of type 'volatile alt_alarm * {aka volatile struct alt_alarm_s *}'
+ extern void alt_alarm_stop (alt_alarm* the_alarm);
+             ^
+c_heart.c:39:18: warning: passing argument 1 of 'alt_alarm_start' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  alt_alarm_start(&URI_LRI, URI_VALUE, URI_LRI_interrupt, NULL);
+                  ^
+In file included from c_heart.c:17:0:
+../303_real_real_bsp//HAL/inc/sys/alt_alarm.h:67:12: note: expected 'alt_alarm * {aka struct alt_alarm_s *}' but argument is of type 'volatile alt_alarm * {aka volatile struct alt_alarm_s *}'
+ extern int alt_alarm_start (alt_alarm* the_alarm, 
+            ^
+c_heart.c:40:18: warning: passing argument 1 of 'alt_alarm_start' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  alt_alarm_start(&PVARP, PVARP_VALUE, PVARP_interrupt, NULL);
+                  ^
+In file included from c_heart.c:17:0:
+../303_real_real_bsp//HAL/inc/sys/alt_alarm.h:67:12: note: expected 'alt_alarm * {aka struct alt_alarm_s *}' but argument is of type 'volatile alt_alarm * {aka volatile struct alt_alarm_s *}'
+ extern int alt_alarm_start (alt_alarm* the_alarm, 
+            ^
+c_heart.c:41:18: warning: passing argument 1 of 'alt_alarm_start' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  alt_alarm_start(&VRP, VRP_VALUE, VRP_interrupt, NULL);
+                  ^
+In file included from c_heart.c:17:0:
+../303_real_real_bsp//HAL/inc/sys/alt_alarm.h:67:12: note: expected 'alt_alarm * {aka struct alt_alarm_s *}' but argument is of type 'volatile alt_alarm * {aka volatile struct alt_alarm_s *}'
+ extern int alt_alarm_start (alt_alarm* the_alarm, 
+            ^
+c_heart.c:42:18: warning: passing argument 1 of 'alt_alarm_start' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  alt_alarm_start(&AEI_AVI, AEI_VALUE, AEI_AVI_interrupt, NULL);
+                  ^
+In file included from c_heart.c:17:0:
+../303_real_real_bsp//HAL/inc/sys/alt_alarm.h:67:12: note: expected 'alt_alarm * {aka struct alt_alarm_s *}' but argument is of type 'volatile alt_alarm * {aka volatile struct alt_alarm_s *}'
+ extern int alt_alarm_start (alt_alarm* the_alarm, 
+            ^
+c_heart.c: In function 'extern_a_interrupt':
+c_heart.c:102:18: warning: passing argument 1 of 'alt_alarm_stop' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   alt_alarm_stop(&AEI_AVI);
+                  ^
+In file included from c_heart.c:17:0:
+../303_real_real_bsp//HAL/inc/sys/alt_alarm.h:77:13: note: expected 'alt_alarm * {aka struct alt_alarm_s *}' but argument is of type 'volatile alt_alarm * {aka volatile struct alt_alarm_s *}'
+ extern void alt_alarm_stop (alt_alarm* the_alarm);
+             ^
+c_heart.c:103:19: warning: passing argument 1 of 'alt_alarm_start' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   alt_alarm_start(&AEI_AVI, AVI_VALUE, AEI_AVI_interrupt, NULL);
+                   ^
+In file included from c_heart.c:17:0:
+../303_real_real_bsp//HAL/inc/sys/alt_alarm.h:67:12: note: expected 'alt_alarm * {aka struct alt_alarm_s *}' but argument is of type 'volatile alt_alarm * {aka volatile struct alt_alarm_s *}'
+ extern int alt_alarm_start (alt_alarm* the_alarm, 
+            ^
+Info: Compiling main.c to obj/default/main.o
+nios2-elf-gcc -xc -MP -MMD -c -I../303_real_real_bsp//HAL/inc -I../303_real_real_bsp/ -I../303_real_real_bsp//drivers/inc  -pipe -D__hal__ -DALT_NO_INSTRUCTION_EMULATION -DALT_SINGLE_THREADED    -O0 -g -Wall   -mno-hw-div -mhw-mul -mno-hw-mulx -mgpopt=global  -o obj/default/main.o main.c
+main.c: In function 'main':
+main.c:87:22: warning: passing argument 1 of 'uart_rx' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+             uart_rx( & char_recieve);
+                      ^
+In file included from main.c:11:0:
+uart.h:12:5: note: expected 'char *' but argument is of type 'volatile char *'
+ int uart_rx(char * character_to_receive);
+     ^
+Info: Linking 303_real_real.elf
+nios2-elf-g++  -T'../303_real_real_bsp//linker.x' -msys-crt0='../303_real_real_bsp//obj/HAL/src/crt0.o' -msys-lib=hal_bsp -L../303_real_real_bsp/   -Wl,-Map=303_real_real.map   -O0 -g -Wall   -mno-hw-div -mhw-mul -mno-hw-mulx -mgpopt=global  -o 303_real_real.elf obj/default/c_heart.o obj/default/main.o obj/default/scchart_heart.o obj/default/uart.o -lm -msys-lib=m
+nios2-elf-insert 303_real_real.elf --thread_model hal --cpu_name cpu --qsys true --simulation_enabled false --stderr_dev jtag_uart --stdin_dev jtag_uart --stdout_dev jtag_uart --sopc_system_name nios2_system --quartus_project_dir "C:/TEMP/303/303_stuff/DE2-115" --sopcinfo C:/TEMP/303/303_stuff/DE2-115/software/303_real_real_bsp/../../nios2_system.sopcinfo
+Info: (303_real_real.elf) 105 KBytes program size (code + initialized data).
+Info:                     8079 KBytes free for stack + heap.
+Info: Creating 303_real_real.objdump
+nios2-elf-objdump --disassemble --syms --all-header --source 303_real_real.elf >303_real_real.objdump
 [303_real_real build complete]
 
-16:41:20 Build Finished (took 486ms)
+17:26:46 Build Finished (took 1s.242ms)
 

@@ -8,6 +8,8 @@
 #ifndef TIMING_H_
 #define TIMING_H_
 
+
+// adjustable timing values
 #define AVI_VALUE 300
 #define AEI_VALUE 800
 #define PVARP_VALUE 50
