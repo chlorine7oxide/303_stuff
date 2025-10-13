@@ -10,13 +10,13 @@
 #include "altera_avalon_uart_regs.h"
 
 
-// Uart sends 1 char
+// uart sends 1 char
 void uart_tx(char character_to_send) {
     while (!(IORD_ALTERA_AVALON_UART_STATUS(UART_BASE) & ALTERA_AVALON_UART_STATUS_TRDY_MSK)); //wait til ready to transmit
     IOWR_ALTERA_AVALON_UART_TXDATA(UART_BASE, character_to_send);
 }
 
-// Uart checks if received a char
+// uart checks if recieved a char
 int uart_rx(char * character_to_receive) {
     if (IORD_ALTERA_AVALON_UART_STATUS(UART_BASE) & ALTERA_AVALON_UART_STATUS_RRDY_MSK) { //if data is available
         * character_to_receive = IORD_ALTERA_AVALON_UART_RXDATA(UART_BASE); //store data

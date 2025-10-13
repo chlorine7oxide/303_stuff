@@ -63,7 +63,6 @@ int main() {
     // initialisation
     start_cycle(); // C
     alt_alarm_start(&scchart_timer, 1, scchart_interrupt, NULL); // scchart
-    // both modes run simultaneously, for seamless mode switching
 
     while (1) {
 

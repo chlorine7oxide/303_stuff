@@ -33,8 +33,8 @@ volatile alt_u8 scchart_update_flag = 0;
 volatile alt_u8 sc_as = 0, sc_vs = 0;
 volatile TickData t;
 
-alt_u32 scchart_interrupt(){ // scchart updater
-	if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE) & 2){ // only works in scchart mode
+alt_u32 scchart_interrupt(){
+	if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE) & 2){
 		t.AS = sc_as;
 		t.VS = sc_vs;
 		t.deltaT = 1;
@@ -46,7 +46,7 @@ alt_u32 scchart_interrupt(){ // scchart updater
 	}
 
 //	scchart_update_flag = 1;
-	return 1; // 1 ms
+	return 1;
 }
 
 
@@ -60,10 +60,9 @@ int main() {
     // keys and previous values
     alt_u8 key, key0_pre, key1_pre;
 
-    // initialisation
-    start_cycle(); // C
-    alt_alarm_start(&scchart_timer, 1, scchart_interrupt, NULL); // scchart
-    // both modes run simultaneously, for seamless mode switching
+    // initialisation for C mode
+    start_cycle();
+    alt_alarm_start(&scchart_timer, 1, scchart_interrupt, NULL);
 
     while (1) {
 
