@@ -1,9 +1,9 @@
-13:29:33 **** Incremental Build of configuration Nios II for project 303_2 ****
+13:54:12 **** Incremental Build of configuration Nios II for project 303_2 ****
 make all 
 Info: Building ../303_2_bsp/
 C:/intelFPGA/18.1/nios2eds/bin/gnu/H-x86_64-mingw32/bin/make --no-print-directory -C ../303_2_bsp/
 [BSP build complete]
 [303_2 build complete]
 
-13:29:34 Build Finished (took 488ms)
+13:54:12 Build Finished (took 493ms)
 

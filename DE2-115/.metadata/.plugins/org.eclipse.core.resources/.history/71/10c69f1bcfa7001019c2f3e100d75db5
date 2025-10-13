@@ -55,6 +55,7 @@ int main() {
     IOWR_ALTERA_AVALON_UART_CONTROL(UART_BASE, 0);
 
     // initialisaiton for sccharts mode
+    TickData t;
     reset( & t);
 
     // keys and previous values

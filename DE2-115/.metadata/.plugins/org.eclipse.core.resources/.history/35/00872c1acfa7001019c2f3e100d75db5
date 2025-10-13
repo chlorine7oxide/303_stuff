@@ -31,7 +31,6 @@ volatile alt_alarm scchart_timer;
 volatile alt_u8 scchart_update_flag = 0;
 
 volatile alt_u8 sc_as = 0, sc_vs = 0;
-volatile TickData t;
 
 alt_u32 scchart_interrupt(){
 	if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE) & 2){
@@ -55,6 +54,7 @@ int main() {
     IOWR_ALTERA_AVALON_UART_CONTROL(UART_BASE, 0);
 
     // initialisaiton for sccharts mode
+    TickData t;
     reset( & t);
 
     // keys and previous values

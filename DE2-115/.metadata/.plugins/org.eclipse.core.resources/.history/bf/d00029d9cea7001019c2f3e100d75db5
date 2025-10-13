@@ -30,9 +30,6 @@ volatile char char_recieve;
 volatile alt_alarm scchart_timer;
 volatile alt_u8 scchart_update_flag = 0;
 
-volatile alt_u8 sc_as = 0, sc_vs = 0;
-volatile TickData t;
-
 alt_u32 scchart_interrupt(){
 	if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE) & 2){
 		t.AS = sc_as;
@@ -48,13 +45,14 @@ alt_u32 scchart_interrupt(){
 //	scchart_update_flag = 1;
 	return 1;
 }
-
+volatile alt_u8 sc_as = 0, sc_vs = 0;
 
 int main() {
 	// initialise the uart
     IOWR_ALTERA_AVALON_UART_CONTROL(UART_BASE, 0);
 
     // initialisaiton for sccharts mode
+    TickData t;
     reset( & t);
 
     // keys and previous values
@@ -104,7 +102,7 @@ int main() {
 
         } else {
         	// uart control, tx and rx
-            uart_rx( &char_recieve);
+            uart_rx( & char_recieve);
             if (char_recieve == 'A') {
                 extern_a_interrupt();
                 sc_as = 1;
@@ -127,7 +125,17 @@ int main() {
         }
 
         if (IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE) & 2) { // if its on then sccharts SW1
+        	if (scchart_update_flag){
+        		if (sc_as){
+        			printf("as\n");
+        		}
+        		if (sc_vs){
+        			printf("vs\n");
+        		}
 
+        		scchart_update_flag = 0;
+
+        	}
 
         } else { // c mode
             if (reset_cycle) { // a v event has occurred and timers must be reset
