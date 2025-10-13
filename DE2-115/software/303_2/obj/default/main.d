@@ -1,0 +1,35 @@
+obj/default/main.o: main.c ../303_2_bsp/system.h ../303_2_bsp/linker.h \
+ timing.h ../303_2_bsp//drivers/inc/altera_avalon_pio_regs.h \
+ ../303_2_bsp//HAL/inc/io.h ../303_2_bsp//HAL/inc/alt_types.h \
+ ../303_2_bsp//drivers/inc/altera_avalon_uart_regs.h scchart_heart.h \
+ ../303_2_bsp//HAL/inc/sys/alt_alarm.h \
+ ../303_2_bsp//HAL/inc/sys/alt_llist.h ../303_2_bsp//HAL/inc/alt_types.h \
+ ../303_2_bsp//HAL/inc/priv/alt_alarm.h c_heart.h uart.h
+
+../303_2_bsp/system.h:
+
+../303_2_bsp/linker.h:
+
+timing.h:
+
+../303_2_bsp//drivers/inc/altera_avalon_pio_regs.h:
+
+../303_2_bsp//HAL/inc/io.h:
+
+../303_2_bsp//HAL/inc/alt_types.h:
+
+../303_2_bsp//drivers/inc/altera_avalon_uart_regs.h:
+
+scchart_heart.h:
+
+../303_2_bsp//HAL/inc/sys/alt_alarm.h:
+
+../303_2_bsp//HAL/inc/sys/alt_llist.h:
+
+../303_2_bsp//HAL/inc/alt_types.h:
+
+../303_2_bsp//HAL/inc/priv/alt_alarm.h:
+
+c_heart.h:
+
+uart.h:
